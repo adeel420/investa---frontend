@@ -1,0 +1,390 @@
+/* InvestmentPlans — page-specific styles. Base from Dashboard.css */
+
+/* ── Page header ── */
+.ip-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── Plan card ── */
+.ip-plan-card {
+  background: #121212;
+  border-radius: 20px;
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  animation: fadeInUp 0.5s ease-out both;
+  transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* top accent line */
+.ip-plan-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background-size: 200% 100%;
+  animation: shimmer 3s linear infinite;
+}
+
+.ip-accent-teal::before { background: linear-gradient(90deg, #0FD9CD 0%, #ce9f2a 50%, #0FD9CD 100%); }
+.ip-accent-gold::before { background: linear-gradient(90deg, #ce9f2a 0%, #0FD9CD 50%, #ce9f2a 100%); }
+
+.ip-accent-teal { border-color: rgba(15,217,205,0.15); }
+.ip-accent-gold { border-color: rgba(206,159,42,0.15); }
+
+.ip-plan-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.55);
+}
+
+.ip-accent-teal:hover { border-color: rgba(15,217,205,0.35); box-shadow: 0 20px 48px rgba(15,217,205,0.1); }
+.ip-accent-gold:hover { border-color: rgba(206,159,42,0.35); box-shadow: 0 20px 48px rgba(206,159,42,0.1); }
+
+/* ── Plan top row ── */
+.ip-plan-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.ip-plan-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.ip-plan-card:hover .ip-plan-icon { transform: scale(1.1) rotate(6deg); }
+
+.ip-icon-teal {
+  background: rgba(15,217,205,0.12);
+  border: 1px solid rgba(15,217,205,0.25);
+  color: #0FD9CD;
+}
+
+.ip-icon-gold {
+  background: rgba(206,159,42,0.12);
+  border: 1px solid rgba(206,159,42,0.25);
+  color: #ce9f2a;
+}
+
+.ip-plan-name {
+  font-size: 17px;
+  font-weight: 800;
+  color: #f1f5f9;
+  margin: 0 0 6px;
+  letter-spacing: -0.2px;
+}
+
+.ip-plan-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ip-badge-teal { background: rgba(15,217,205,0.12); color: #0FD9CD; border: 1px solid rgba(15,217,205,0.25); }
+.ip-badge-gold { background: rgba(206,159,42,0.12); color: #ce9f2a; border: 1px solid rgba(206,159,42,0.25); }
+
+/* ROI pill */
+.ip-roi-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: rgba(16,185,129,0.1);
+  border: 1px solid rgba(16,185,129,0.2);
+  border-radius: 12px;
+  padding: 8px 14px;
+  flex-shrink: 0;
+}
+
+.ip-roi-value {
+  font-size: 18px;
+  font-weight: 800;
+  color: #10b981;
+  line-height: 1;
+}
+
+.ip-roi-label {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* ── Stats row ── */
+.ip-stats-row {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.ip-stat {
+  flex: 1;
+  text-align: center;
+}
+
+.ip-stat-label {
+  font-size: 10px;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0 0 4px;
+  font-weight: 600;
+}
+
+.ip-stat-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 0;
+}
+
+.ip-stat-divider {
+  width: 1px;
+  height: 32px;
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+
+/* ── Capital return row ── */
+.ip-capital-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 10px;
+}
+
+.ip-capital-text {
+  font-size: 13px;
+  color: #64748b;
+}
+
+/* ── Buttons ── */
+.ip-btn-row {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.ip-btn-row .btn-primary-dash,
+.ip-btn-row .btn-secondary-dash {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.ip-btn-invest {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 12px;
+  border: none;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  letter-spacing: 0.3px;
+}
+
+.ip-btn-teal {
+  background: transparent;
+  border: 2px solid #0ac0b4;
+  color: #0ac0b4;
+}
+
+.ip-btn-teal:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0FD9CD, #09b8ad);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15,217,205,0.45);
+}
+
+.ip-btn-gold {
+  background: transparent;
+  border: 2px solid rgba(206,159,42,0.7);
+  color: #ce9f2a;
+}
+
+.ip-btn-gold:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ce9f2a, #b8891e);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(206,159,42,0.45);
+}
+
+.ip-btn-invest:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ip-btn-deposit {
+  flex: 1;
+  padding: 12px 0;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.ip-btn-deposit:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+  color: #e2e8f0;
+  transform: translateY(-2px);
+}
+
+/* ── Modal ── */
+.ip-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  backdrop-filter: blur(4px);
+}
+
+.ip-modal {
+  background: #121212;
+  border: 1px solid rgba(15,217,205,0.2);
+  border-radius: 22px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+  animation: fadeInUp 0.3s ease-out;
+  overflow: hidden;
+}
+
+.ip-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.ip-modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #64748b;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.ip-modal-close:hover {
+  background: rgba(239,68,68,0.15);
+  color: #ef4444;
+  transform: rotate(90deg);
+}
+
+.ip-modal-body {
+  padding: 22px 24px;
+}
+
+.ip-modal-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+
+.ip-modal-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.ip-modal-footer {
+  display: flex;
+  gap: 10px;
+  padding: 18px 24px 22px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.ip-btn-cancel {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.ip-btn-cancel:hover:not(:disabled) {
+  background: rgba(255,255,255,0.08);
+  color: #94a3b8;
+}
+
+.ip-btn-confirm {
+  flex: 2;
+  padding: 12px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #0FD9CD, #09b8ad);
+  border: none;
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ip-btn-confirm:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15,217,205,0.45);
+}
+
+.ip-btn-confirm:disabled,
+.ip-btn-cancel:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Mobile ── */
+@media (max-width: 767.98px) {
+  .ip-plan-card { padding: 18px; gap: 14px; }
+  .ip-plan-name { font-size: 15px; }
+  .ip-plan-icon { width: 44px; height: 44px; font-size: 18px; }
+  .ip-roi-value { font-size: 16px; }
+  .ip-stat-value { font-size: 13px; }
+  .ip-btn-invest, .ip-btn-deposit { font-size: 13px; padding: 11px 0; }
+}

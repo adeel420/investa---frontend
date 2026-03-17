@@ -1,0 +1,425 @@
+.login-container {
+  background: linear-gradient(135deg, #1a1a2e 0%, #070b16 50%, #091423 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background-attachment: fixed;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(14,165,233,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(139,92,246,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.login-card {
+  background: transparent;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  border: 1px solid rgba(68,210,246,0.2);
+  backdrop-filter: blur(20px);
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 450px;
+  animation: fadeInUp .8s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {opacity:0;transform:translateY(30px);}
+  to {opacity:1;transform:translateY(0);}
+}
+
+.login-card::before {
+  content:'';
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  height:4px;
+  background:linear-gradient(90deg,#0FD9CD,#f472b6,#ce9f2a);
+  border-radius:24px 24px 0 0;
+}
+
+.login-icon {
+  width:110px;
+  height:110px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 20px;
+  box-shadow:0 10px 30px rgba(68,210,246,.4);
+  animation:pulse 2s infinite;
+  overflow:hidden;
+}
+
+.login-logo{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+
+
+@keyframes pulse {
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.05)}
+}
+
+.login-icon i {
+  font-size:36px;
+  color:#fff;
+}
+
+.login-title {
+  color:#fff;
+  font-weight:700;
+  font-size:2rem;
+  margin-bottom:8px;
+  text-align:center;
+}
+
+.login-subtitle {
+  color:rgba(255,255,255,.5);
+  text-align:center;
+  margin-bottom:30px;
+  font-size:.875rem;
+}
+
+/* BUTTONS */
+
+.login-btn {
+background: linear-gradient(135deg, #F2CF76 0%, #0FD9CD 100%);
+  padding:14px 28px;
+  border-radius:12px;
+  font-weight:600;
+  width:100%;
+  transition:.4s;
+  box-shadow:0 5px 20px rgba(68,210,246,.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+}
+
+.login-btn:hover {
+  transform:translateY(-3px);
+  box-shadow:0 10px 30px rgba(68,210,246,.6);
+}
+
+.register-btn {
+background: linear-gradient(135deg, #F2CF76 0%, #0FD9CD 100%);
+  border:none;
+  padding:12px 24px;
+  border-radius:10px;
+  font-weight:600;
+  font-size:15px;
+  width:100%;
+  min-height:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 4px 16px rgba(126,34,206,.35);
+}
+
+/* INPUT */
+
+.input-group {
+  display:flex;
+  width:100%;
+  margin-bottom:.9rem;
+}
+
+.input-group-text {
+  background:rgba(15,23,42,.85);
+  border:2px solid rgba(68,210,246,.25);
+  border-right:none;
+  border-radius:10px 0 0 10px;
+  color:white;
+  padding:10px 14px;
+  min-width:48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.input-group .form-control {
+  border-left:none;
+  border-radius:0 10px 10px 0;
+}
+
+.form-control {
+  background:rgba(15,23,42,.85);
+  border:2px solid rgba(68,210,246,.25);
+  border-radius:10px;
+  color:white !important;
+  padding:10px 14px;
+  font-size:14px;
+  transition:.25s;
+  height:44px;
+}
+
+.form-control:focus {
+  background:rgba(15,23,42,.98);
+  border-color:#44d2f6;
+  box-shadow:0 0 0 3px rgba(68,210,246,.18);
+  outline:none;
+}
+
+.form-control::placeholder {
+  color:#94a3b8;
+  opacity:.65;
+}
+
+.form-label {
+  color:#94a3b8;
+  font-weight:500;
+  margin-bottom:8px;
+  font-size:14px;
+}
+
+.register-link {
+  color:#0fd9cd;
+  font-weight:600;
+  margin-left:6px;
+  cursor:pointer;
+}
+
+/* ========================= */
+/* MOBILE RESPONSIVE DESIGN  */
+/* ========================= */
+
+@media (max-width: 576px) {
+
+  .login-container {
+    padding:0;
+    align-items:flex-start;
+  }
+
+  .login-card {
+    max-width:100%;
+    width:100%;
+    border:none;
+    box-shadow:none;
+    border-radius:0;
+    backdrop-filter:none;
+    padding:30px 22px;
+  }
+
+  .login-card::before {
+    display:none;
+  }
+
+  .login-icon {
+    width:100px;
+    height:100px;
+    margin-top:20px;
+  }
+
+  .login-icon i {
+    font-size:80px;
+  }
+
+  .login-title {
+    font-size:1.7rem;
+  }
+
+  .login-subtitle {
+    font-size:.8rem;
+    margin-bottom:25px;
+  }
+
+}
+
+
+
+/* Forgot Password Modal */
+.forgot-modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(2, 6, 23, 0.75);
+  backdrop-filter:blur(8px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  padding:16px;
+}
+
+.forgot-modal-card{
+  position:relative;
+  width:100%;
+  max-width:460px;
+  background:linear-gradient(145deg,rgba(30,41,59,.92) 0%,rgba(15,23,42,.97) 100%);
+  border:1px solid rgba(14,165,233,.25);
+  border-radius:24px;
+  padding:28px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
+  animation:fadeInUp .25s ease;
+}
+
+.forgot-modal-close{
+  position:absolute;
+  top:14px;
+  right:14px;
+  width:38px;
+  height:38px;
+  border:none;
+  border-radius:50%;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:.3s ease;
+}
+
+.forgot-modal-close:hover{
+  background:rgba(255,255,255,.15);
+  transform:rotate(90deg);
+}
+
+.forgot-steps{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.forgot-step{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:rgba(255,255,255,.08);
+  color:#94a3b8;
+  font-weight:700;
+  border:1px solid rgba(255,255,255,.08);
+  transition:.3s ease;
+}
+
+.forgot-step.active{
+  background:linear-gradient(90deg,#ce9f2a 0%,#0FD9CD 100%);
+  color:#fff;
+  border-color:transparent;
+  box-shadow:0 6px 18px rgba(15,217,205,.25);
+}
+
+.forgot-step-line{
+  width:48px;
+  height:2px;
+  background:rgba(255,255,255,.12);
+  margin:0 8px;
+  transition:.3s ease;
+}
+
+.forgot-step-line.active{
+  background:linear-gradient(90deg,#ce9f2a 0%,#0FD9CD 100%);
+}
+
+.forgot-secondary-btn{
+  flex:1;
+  border:none;
+  border-radius:14px;
+  padding:14px 20px;
+  font-weight:600;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  transition:.3s ease;
+}
+
+.forgot-secondary-btn:hover{
+  background:rgba(255,255,255,.14);
+}
+
+@media(max-width:576px){
+  .forgot-modal-card{
+    padding:20px;
+    border-radius:18px;
+  }
+
+  .forgot-step{
+    width:30px;
+    height:30px;
+    font-size:13px;
+  }
+
+  .forgot-step-line{
+    width:32px;
+    margin:0 6px;
+  }
+}
+
+
+.phone-group .input-group-text {
+  border-radius: 10px 0 0 10px;
+}
+
+.phone-country-code {
+  max-width: 75px;
+  flex: 0 0 120px;
+  background: rgba(15,23,42,.85);
+  border: 2px solid rgba(68,210,246,.25);
+  border-left: none;
+  border-right: none;
+  color: white;
+  height: 44px;
+  padding: 10px 36px 10px 12px;
+  font-size: 14px;
+  outline: none;
+  box-shadow: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  background-image:
+    linear-gradient(45deg, transparent 50%, #94a3b8 50%),
+    linear-gradient(135deg, #94a3b8 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+}
+
+.phone-country-code:focus {
+  background-color: rgba(15,23,42,.98);
+  border-color: #44d2f6;
+  box-shadow: 0 0 0 3px rgba(68,210,246,.18);
+}
+
+.phone-country-code option {
+  background: #0f172a;
+  color: white;
+}
+
+.phone-number-input {
+  border-left: none !important;
+  border-radius: 0 10px 10px 0 !important;
+}
+
+.phone-group .phone-country-code,
+.phone-group .phone-number-input {
+  margin-bottom: 0;
+}
+
+@media (max-width: 576px) {
+  .phone-country-code {
+    max-width: 75px;
+    flex: 0 0 100px;
+    font-size: 13px;
+    padding: 10px 30px 10px 10px;
+  }
+}

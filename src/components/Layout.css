@@ -1,0 +1,49 @@
+.main-content {
+  margin-left: 260px;
+  width: calc(100% - 260px);
+  min-height: 100vh;
+  background: linear-gradient(160deg, #000000 0%, #000000 50%, #1a0533 80%, #2a0845 100%);
+  background-attachment: fixed;
+  transition: all 0.3s ease;
+}
+
+.sidebar-overlay {
+  display: none;
+}
+
+/* Tablet (768px–991px): sidebar slides in, no bottom nav */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    background: linear-gradient(160deg, #000000 0%, #000000 50%, #1a0533 80%, #2a0845 100%);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* Mobile (<768px): sidebar slides in + bottom nav padding */
+@media (max-width: 767.98px) {
+  .main-content {
+    margin-left: 0 !important;
+    width: 100% !important;
+    padding-bottom: 80px;
+    background: linear-gradient(160deg, #000000 0%, #000000 50%, #1a0533 80%, #2a0845 100%);
+  }
+
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+  }
+}

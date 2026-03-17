@@ -1,0 +1,96 @@
+/* Wallet-specific overrides — base styles from Dashboard.css */
+
+/* ── Balance card buttons (top-right) ── */
+.wallet-action-btns {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  display: flex;
+  gap: 12px;
+}
+
+.wallet-action-btns .bc-btn-deposit,
+.wallet-action-btns .bc-btn-withdraw {
+  width: auto;
+  padding: 10px 20px;
+  font-size: 14px;
+}
+
+/* ── Search box ── */
+.wallet-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.wallet-search-icon {
+  position: absolute;
+  left: 12px;
+  color: #475569;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.wallet-search-box {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 8px 14px 8px 34px;
+  color: #e2e8f0;
+  font-size: 13px;
+  width: 200px;
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+.wallet-search-box:focus {
+  border-color: rgba(15,217,205,0.4);
+  background: rgba(15,217,205,0.04);
+}
+
+.wallet-search-box::placeholder { color: #475569; }
+
+/* ── Filter select ── */
+.wallet-filter-select {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 8px 14px;
+  color: #e2e8f0;
+  font-size: 13px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.wallet-filter-select:focus {
+  border-color: rgba(15,217,205,0.4);
+}
+
+.wallet-filter-select option {
+  background: #121212;
+  color: #e2e8f0;
+}
+
+/* ── Responsive ── */
+@media (max-width: 767.98px) {
+  .wallet-action-btns {
+    position: static;
+    margin-top: 20px;
+    justify-content: flex-start;
+  }
+
+  .wallet-action-btns .bc-btn-deposit,
+  .wallet-action-btns .bc-btn-withdraw {
+    padding: 9px 16px;
+    font-size: 13px;
+  }
+
+  .wallet-search-box { width: 150px; }
+
+  .bc-card { padding-top: 20px; }
+}
+
+@media (max-width: 480px) {
+  .wallet-search-box { width: 120px; }
+}
