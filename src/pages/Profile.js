@@ -11,7 +11,7 @@ const Profile = () => {
   const [showProfileSettings, setShowProfileSettings] = useState(false);
   const [activeTab, setActiveTab] = useState('account');
   const [isEditing, setIsEditing] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // eslint-disable-line no-unused-vars
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',

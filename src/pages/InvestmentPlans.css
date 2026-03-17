@@ -138,13 +138,13 @@
   padding: 14px 16px;
 }
 
-.ip-stat {
-  flex: 1;
-  text-align: center;
-}
+.ip-stat { flex: 1; }
+
+.ip-stat-left { text-align: left; }
+.ip-stat-right { text-align: right; }
 
 .ip-stat-label {
-  font-size: 10px;
+  font-size: 11px;
   color: #475569;
   text-transform: uppercase;
   letter-spacing: 0.6px;
@@ -159,11 +159,18 @@
   margin: 0;
 }
 
+.ip-stat-sub {
+  font-size: 11px;
+  color: #475569;
+  font-weight: 400;
+}
+
 .ip-stat-divider {
   width: 1px;
-  height: 32px;
-  background: rgba(255,255,255,0.06);
+  height: 40px;
+  background: rgba(255,255,255,0.08);
   flex-shrink: 0;
+  margin: 0 16px;
 }
 
 /* ── Capital return row ── */

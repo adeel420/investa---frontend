@@ -12,7 +12,7 @@ import "./Wallet.css";
 
 const Wallet = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [balanceVisible, setBalanceVisible] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPeriod, setFilterPeriod] = useState("all");

@@ -1,43 +1,23 @@
 import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout";
 import { useAuth } from "../contexts/AuthContext";
-import {
-  depositService,
-  withdrawalService,
-  investmentService,
-} from "../lib/services";
+import { depositService, withdrawalService, investmentService } from "../lib/services";
+import "../pages/Dashboard.css";
 import "./Transactions.css";
 
 const Transactions = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); // eslint-disable-line no-unused-vars
   const [searchTerm, setSearchTerm] = useState("");
   const [filterPeriod, setFilterPeriod] = useState("all");
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState({
-    totalEarning: 0,
-    referralEarning: 0,
-    totalDeposit: 0,
-    totalWithdrawn: 0,
-  });
+  const [stats, setStats] = useState({ totalEarning: 0, referralEarning: 0, totalDeposit: 0, totalWithdrawn: 0 });
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [filterPeriod]);
-
-  useEffect(() => {
-    // Add floating animation to cards
-    const cards = document.querySelectorAll(".dashboard-card, .stat-card");
-    cards.forEach((card, index) => {
-      card.style.animation = `fadeInUp 0.6s ease-out ${index * 0.1}s both`;
-    });
-  }, []);
+  useEffect(() => { fetchTransactions(); }, [filterPeriod]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fetchTransactions = async () => {
     try {
       setLoading(true);
-
-      // Fetch all transaction types
       const [depositsRes, withdrawalsRes, investmentsRes] = await Promise.all([
         depositService.getMyDeposits(),
         withdrawalService.getMyWithdrawals(),
@@ -45,73 +25,28 @@ const Transactions = () => {
       ]);
 
       const deposits = (depositsRes.data.data.deposits || []).map((d) => ({
-        ...d,
-        type: "Deposit",
-        displayType: `Deposit (${d.paymentMethod || "Unknown"})`,
-        date: d.createdAt,
-        amount: d.amountUSD,
+        ...d, type: "Deposit", displayType: `${d.paymentMethod || "Unknown"}`, date: d.createdAt, amount: d.amountUSD,
+      }));
+      const withdrawals = (withdrawalsRes.data.data.withdrawals || []).map((w) => ({
+        ...w, type: "Withdrawal", displayType: `${w.paymentMethod || "Unknown"}`, date: w.createdAt, amount: w.amountUSD,
+      }));
+      const investments = (investmentsRes.data.data.investments || []).map((inv) => ({
+        ...inv, type: "Investment", displayType: `${inv.plan?.name || "Plan"}`, date: inv.createdAt, amount: inv.amount,
       }));
 
-      const withdrawals = (withdrawalsRes.data.data.withdrawals || []).map(
-        (w) => ({
-          ...w,
-          type: "Withdrawal",
-          displayType: `Withdrawal (${w.paymentMethod || "Unknown"})`,
-          date: w.createdAt,
-          amount: w.amountUSD,
-        }),
-      );
-
-      const investments = (investmentsRes.data.data.investments || []).map(
-        (inv) => ({
-          ...inv,
-          type: "Investment",
-          displayType: `Investment (${inv.plan?.name || "Plan"})`,
-          status: inv.status,
-          date: inv.createdAt,
-          amount: inv.amount,
-        }),
-      );
-
-      // Combine all transactions
       let allTransactions = [...deposits, ...withdrawals, ...investments];
 
-      // Calculate stats
-      const totalDeposit = deposits
-        .filter((d) => d.status === "APPROVED")
-        .reduce((sum, d) => sum + Number(d.amountUSD || 0), 0);
+      const totalDeposit = deposits.filter((d) => d.status === "APPROVED").reduce((s, d) => s + Number(d.amountUSD || 0), 0);
+      const totalWithdrawn = withdrawals.filter((w) => w.status === "PAID").reduce((s, w) => s + Number(w.amountUSD || 0), 0);
 
-      const totalWithdrawn = withdrawals
-        .filter((w) => w.status === "PAID")
-        .reduce((sum, w) => sum + Number(w.amountUSD || 0), 0);
+      setStats({ totalEarning: user?.totalEarnings || 0, referralEarning: user?.totalReferralEarning || 0, totalDeposit, totalWithdrawn });
 
-
-      const referralEarning = user?.totalReferralEarning || 0;
-
-      const totalEarning = user?.totalEarnings || 0;
-
-      setStats({
-        totalEarning,
-        referralEarning,
-        totalDeposit,
-        totalWithdrawn,
-      });
-
-      // Filter by period
       if (filterPeriod !== "all") {
-        const days = parseInt(filterPeriod);
-        const cutoffDate = new Date(
-          new Date().getTime() - days * 24 * 60 * 60 * 1000,
-        );
-        allTransactions = allTransactions.filter((t) => {
-          const tDate = new Date(t.date);
-          return tDate >= cutoffDate;
-        });
+        const cutoff = new Date(Date.now() - parseInt(filterPeriod) * 86400000);
+        allTransactions = allTransactions.filter((t) => new Date(t.date) >= cutoff);
       }
 
-      // Sort by date (newest first)
       allTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-
       setTransactions(allTransactions);
     } catch (err) {
       console.error("Failed to fetch transactions:", err);
@@ -120,227 +55,188 @@ const Transactions = () => {
     }
   };
 
-  // Filter by search term
   const filteredTransactions = transactions.filter((t) => {
     if (!searchTerm) return true;
-    const search = searchTerm.toLowerCase();
-    return (
-      t.type.toLowerCase().includes(search) ||
-      (t.displayType && t.displayType.toLowerCase().includes(search)) ||
-      t.status.toLowerCase().includes(search) ||
-      t.amount.toString().includes(search)
-    );
+    const s = searchTerm.toLowerCase();
+    return t.type.toLowerCase().includes(s) || t.displayType.toLowerCase().includes(s) || t.status.toLowerCase().includes(s) || t.amount.toString().includes(s);
   });
 
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return (
-      date.toLocaleDateString() +
-      " " +
-      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    );
+  const formatDate = (d) => {
+    const date = new Date(d);
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const formatCurrency = (amount) => {
-    return `$${Number(amount).toFixed(2)}`;
+  const formatCurrency = (a) => `$${Number(a).toFixed(2)}`;
+
+  const typeConfig = {
+    Deposit:    { icon: "fas fa-arrow-down", color: "#0FD9CD", bg: "rgba(15,217,205,0.12)", border: "rgba(15,217,205,0.25)" },
+    Withdrawal: { icon: "fas fa-arrow-up",   color: "#ce9f2a", bg: "rgba(206,159,42,0.12)", border: "rgba(206,159,42,0.25)" },
+    Investment: { icon: "fas fa-chart-line", color: "#3b82f6", bg: "rgba(59,130,246,0.12)", border: "rgba(59,130,246,0.25)" },
   };
 
-  const getStatusBadge = (status) => {
-    const statusClasses = {
-      pending: "text-warning",
-      approved: "text-success",
-      rejected: "text-danger",
-      completed: "text-success",
-      active: "text-success",
-      cancelled: "text-danger",
-    };
-    return (
-      <span className={statusClasses[status] || "text-gray"}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </span>
-    );
+  const statusConfig = {
+    pending:   { color: "#f59e0b", bg: "rgba(245,158,11,0.12)",  border: "rgba(245,158,11,0.25)",  label: "Pending"   },
+    approved:  { color: "#0FD9CD", bg: "rgba(15,217,205,0.12)",  border: "rgba(15,217,205,0.25)",  label: "Approved"  },
+    APPROVED:  { color: "#0FD9CD", bg: "rgba(15,217,205,0.12)",  border: "rgba(15,217,205,0.25)",  label: "Approved"  },
+    rejected:  { color: "#ef4444", bg: "rgba(239,68,68,0.12)",   border: "rgba(239,68,68,0.25)",   label: "Rejected"  },
+    REJECTED:  { color: "#ef4444", bg: "rgba(239,68,68,0.12)",   border: "rgba(239,68,68,0.25)",   label: "Rejected"  },
+    completed: { color: "#0FD9CD", bg: "rgba(15,217,205,0.12)",  border: "rgba(15,217,205,0.25)",  label: "Completed" },
+    active:    { color: "#22c55e", bg: "rgba(34,197,94,0.12)",   border: "rgba(34,197,94,0.25)",   label: "Active"    },
+    ACTIVE:    { color: "#22c55e", bg: "rgba(34,197,94,0.12)",   border: "rgba(34,197,94,0.25)",   label: "Active"    },
+    paid:      { color: "#0FD9CD", bg: "rgba(15,217,205,0.12)",  border: "rgba(15,217,205,0.25)",  label: "Paid"      },
+    PAID:      { color: "#0FD9CD", bg: "rgba(15,217,205,0.12)",  border: "rgba(15,217,205,0.25)",  label: "Paid"      },
+    cancelled: { color: "#ef4444", bg: "rgba(239,68,68,0.12)",   border: "rgba(239,68,68,0.25)",   label: "Cancelled" },
   };
 
-  const getTypeBadge = (type) => {
-    const typeClasses = {
-      Deposit: "badge bg-success",
-      Withdrawal: "badge bg-warning text-dark",
-      Investment: "badge bg-info text-dark",
-    };
-    return (
-      <span className={typeClasses[type] || "badge bg-secondary"}>{type}</span>
-    );
-  };
+  const statCards = [
+    { label: "Total Earning",    value: formatCurrency(stats.totalEarning),    icon: "fas fa-coins",        color: "#0FD9CD", bg: "rgba(15,217,205,0.12)",  border: "rgba(15,217,205,0.25)"  },
+    { label: "Referral Earning", value: formatCurrency(stats.referralEarning), icon: "fas fa-user-friends", color: "#ce9f2a", bg: "rgba(206,159,42,0.12)",  border: "rgba(206,159,42,0.25)"  },
+    { label: "Total Deposit",    value: formatCurrency(stats.totalDeposit),    icon: "fas fa-arrow-down",   color: "#22c55e", bg: "rgba(34,197,94,0.12)",   border: "rgba(34,197,94,0.25)"   },
+    { label: "Total Withdrawn",  value: formatCurrency(stats.totalWithdrawn),  icon: "fas fa-arrow-up",     color: "#ef4444", bg: "rgba(239,68,68,0.12)",   border: "rgba(239,68,68,0.25)"   },
+  ];
 
   return (
     <Layout title="Transactions">
-      {/* Stats Row */}
-      <div className="row g-4 mb-4">
-        {/* Total Earning */}
-        <div className="col-lg-3 col-md-6">
-          <div className="stat-card">
-            <div className="d-flex align-items-center">
-              <div className="stat-icon bg-orange">
-                <i className="fas fa-dollar-sign text-white"></i>
-              </div>
-              <div>
-                <p className="text-gray small mb-1">Total Earning</p>
-                <h4 className="text-white fw-bold mb-0">
-                  {formatCurrency(stats.totalEarning)}
-                </h4>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Referral Earning */}
-        <div className="col-lg-3 col-md-6">
-          <div className="stat-card">
-            <div className="d-flex align-items-center">
-              <div className="stat-icon bg-purple">
-                <i className="fas fa-user-friends text-white"></i>
-              </div>
-              <div>
-                <p className="text-gray small mb-1">Referral Earning</p>
-                <h4 className="text-white fw-bold mb-0">
-                  {formatCurrency(stats.referralEarning)}
-                </h4>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Total Deposit */}
-        <div className="col-lg-3 col-md-6">
-          <div className="stat-card">
-            <div className="d-flex align-items-center">
-              <div className="stat-icon bg-yellow">
-                <i className="fas fa-arrow-up text-white"></i>
-              </div>
-              <div>
-                <p className="text-gray small mb-1">Total Deposit</p>
-                <h4 className="text-white fw-bold mb-0">
-                  {formatCurrency(stats.totalDeposit)}
-                </h4>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Total Withdrawn */}
-        <div className="col-lg-3 col-md-6">
-          <div className="stat-card">
-            <div className="d-flex align-items-center">
-              <div className="stat-icon bg-red">
-                <i className="fas fa-arrow-down text-white"></i>
-              </div>
-              <div>
-                <p className="text-gray small mb-1">Total Withdrawn</p>
-                <h4 className="text-white fw-bold mb-0">
-                  {formatCurrency(stats.totalWithdrawn)}
-                </h4>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <div className="p-4">
 
-      {/* Transaction History */}
-      <div className="dashboard-card">
-        <div className="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
-          <h5 className="text-white fw-bold mb-0">Transaction History</h5>
-          <div className="d-flex gap-3">
-            <div className="position-relative">
-              <i
-                className="fas fa-search position-absolute text-gray"
-                style={{
-                  left: "12px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                }}
-              ></i>
-              <input
-                type="text"
-                className="search-box ps-5"
-                placeholder="Search"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+        {/* ── Stat Cards ── */}
+        <div className="row g-3 mb-4">
+          {statCards.map((s, i) => (
+            <div key={i} className="col-6 col-lg-3">
+              <div className="dashboard-card tn-stat-card">
+                <div className="d-flex align-items-center gap-3">
+                  <div className="tn-stat-icon" style={{ background: s.bg, border: `1px solid ${s.border}`, color: s.color }}>
+                    <i className={s.icon}></i>
+                  </div>
+                  <div>
+                    <p className="tn-stat-label mb-0">{s.label}</p>
+                    <h5 className="tn-stat-val mb-0" style={{ color: s.color }}>{s.value}</h5>
+                  </div>
+                </div>
+              </div>
             </div>
-            <button
-              className="btn btn-link text-white p-2 professional-btn"
-              style={{
-                background:
-                  "linear-gradient(145deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.9) 100%)",
-                border: "1px solid rgba(68, 210, 246, 0.3)",
-                borderRadius: "12px",
-                transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-              }}
-            >
-              <i className="fas fa-sliders-h"></i>
-            </button>
-            <select
-              className="filter-dropdown"
-              value={filterPeriod}
-              onChange={(e) => setFilterPeriod(e.target.value)}
-            >
-              <option value="3">3 Days</option>
-              <option value="7">7 Days</option>
-              <option value="30">30 Days</option>
-              <option value="all">All Time</option>
-            </select>
-          </div>
+          ))}
         </div>
 
-        {/* Table */}
-        <div className="table-responsive">
-          <table className="custom-table">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Details</th>
-                <th>Amount</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-5">
-                    <div className="spinner-border text-primary" role="status">
-                      <span className="visually-hidden">Loading...</span>
-                    </div>
-                  </td>
-                </tr>
-              ) : filteredTransactions.length === 0 ? (
-                <tr>
-                  <td colSpan="5" className="text-center py-5">
-                    <div className="py-5">
-                      <p
-                        className="text-gray mb-0"
-                        style={{ fontSize: "16px" }}
-                      >
-                        No transaction history found!
-                      </p>
-                    </div>
-                  </td>
-                </tr>
-              ) : (
-                filteredTransactions.map((transaction, index) => (
-                  <tr key={index}>
-                    <td>{getTypeBadge(transaction.type)}</td>
-                    <td className="text-gray">{transaction.displayType}</td>
-                    <td className="text-white fw-bold">
-                      {formatCurrency(transaction.amount)}
-                    </td>
-                    <td>{getStatusBadge(transaction.status)}</td>
-                    <td className="text-gray">
-                      {formatDate(transaction.date)}
-                    </td>
+        {/* ── Transaction History ── */}
+        <div className="dashboard-card">
+          {/* Header */}
+          <div className="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <div className="tx-card-title-wrap">
+              <div className="tx-card-icon">
+                <i className="fas fa-list-alt"></i>
+              </div>
+              <div>
+                <h5 className="tx-card-title">Transaction History</h5>
+                <p className="tx-card-sub">{filteredTransactions.length} records found</p>
+              </div>
+            </div>
+            <div className="d-flex gap-2 flex-wrap">
+              <div className="tn-search-wrap">
+                <i className="fas fa-search tn-search-icon"></i>
+                <input
+                  type="text"
+                  className="tn-search"
+                  placeholder="Search transactions..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <select className="tn-filter" value={filterPeriod} onChange={(e) => setFilterPeriod(e.target.value)}>
+                <option value="3">3 Days</option>
+                <option value="7">7 Days</option>
+                <option value="30">30 Days</option>
+                <option value="all">All Time</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Table */}
+          {loading ? (
+            <div className="d-flex justify-content-center py-5">
+              <div className="spinner-border" style={{ color: "#0FD9CD" }} role="status">
+                <span className="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          ) : filteredTransactions.length === 0 ? (
+            <div className="tx-empty">
+              <i className="fas fa-inbox"></i>
+              <p>No transactions found</p>
+            </div>
+          ) : (
+            <div className="tn-table-wrap">
+              {/* Desktop table */}
+              <table className="tn-table d-none d-md-table">
+                <thead>
+                  <tr>
+                    <th>Type</th>
+                    <th>Details</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                </thead>
+                <tbody>
+                  {filteredTransactions.map((t, i) => {
+                    const tc = typeConfig[t.type] || typeConfig.Investment;
+                    const sc = statusConfig[t.status] || { color: "#64748b", bg: "rgba(100,116,139,0.12)", border: "rgba(100,116,139,0.25)", label: t.status };
+                    return (
+                      <tr key={i} className="tn-table-row">
+                        <td>
+                          <div className="d-flex align-items-center gap-2">
+                            <div className="tn-type-icon" style={{ background: tc.bg, border: `1px solid ${tc.border}`, color: tc.color }}>
+                              <i className={tc.icon}></i>
+                            </div>
+                            <span className="tn-type-label" style={{ color: tc.color }}>{t.type}</span>
+                          </div>
+                        </td>
+                        <td className="tn-detail">{t.displayType}</td>
+                        <td className="tn-amount">{formatCurrency(t.amount)}</td>
+                        <td>
+                          <span className="tn-status-badge" style={{ color: sc.color, background: sc.bg, border: `1px solid ${sc.border}` }}>
+                            {sc.label}
+                          </span>
+                        </td>
+                        <td className="tn-date">{formatDate(t.date)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+
+              {/* Mobile cards */}
+              <div className="d-md-none">
+                {filteredTransactions.map((t, i) => {
+                  const tc = typeConfig[t.type] || typeConfig.Investment;
+                  const sc = statusConfig[t.status] || { color: "#64748b", bg: "rgba(100,116,139,0.12)", border: "rgba(100,116,139,0.25)", label: t.status };
+                  return (
+                    <div key={i} className="tn-mobile-row">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <div className="d-flex align-items-center gap-2">
+                          <div className="tn-type-icon" style={{ background: tc.bg, border: `1px solid ${tc.border}`, color: tc.color }}>
+                            <i className={tc.icon}></i>
+                          </div>
+                          <div>
+                            <span className="tn-type-label" style={{ color: tc.color }}>{t.type}</span>
+                            <p className="tn-detail mb-0">{t.displayType}</p>
+                          </div>
+                        </div>
+                        <div className="text-end">
+                          <p className="tn-amount mb-1">{formatCurrency(t.amount)}</p>
+                          <span className="tn-status-badge" style={{ color: sc.color, background: sc.bg, border: `1px solid ${sc.border}` }}>
+                            {sc.label}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="tn-date mb-0">{formatDate(t.date)}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
+
       </div>
     </Layout>
   );

@@ -10,7 +10,7 @@ import "../pages/Dashboard.css";
 import "./WithdrawFunds.css";
 
 const WithdrawFunds = () => {
-  const { user } = useAuth();
+  const { user: _user } = useAuth();
   const [selectedMethod, setSelectedMethod] = useState("");
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
@@ -25,7 +25,7 @@ const WithdrawFunds = () => {
   useEffect(() => {
     fetchPaymentMethods();
     fetchWalletBalance();
-    fetchWithdrawHistory();
+    fetchWithdrawHistory(); // eslint-disable-line react-hooks/exhaustive-deps
   }, [filterPeriod]);
 
   const fetchPaymentMethods = async () => {

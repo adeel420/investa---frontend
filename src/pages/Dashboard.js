@@ -129,7 +129,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchDashboardData();
+    fetchDashboardData(); // eslint-disable-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

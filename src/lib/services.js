@@ -101,7 +101,7 @@ export const depositService = {
   getById: (id) => api.get(`/deposits/${id}`),
 };
 
-export default {
+const services = {
   auth: authService,
   plans: planService,
   wallet: walletService,
@@ -114,3 +114,5 @@ export default {
   ranks: rankService,
   referrals: referralService,
 };
+
+export default services;
